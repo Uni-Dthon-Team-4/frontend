@@ -16,7 +16,11 @@ final class SignupViewController: UIViewController {
     private var isEmailDuplicateChecked: Bool = false
     
     private let ageArray: [Int] = Array(1...99)
-    private var selectedAge: Int?
+    private var selectedAge: Int? {
+        didSet {
+            tfDidChange()
+        }
+    }
     
     private let interestArray: [String] = ["청년", "취업", "창업", "교육", "장학금", "중장년", "경제", "노인", "사업", "주택", "지원", "저소득"]
     private let minimumLineSpacing: CGFloat = 10
@@ -120,6 +124,7 @@ final class SignupViewController: UIViewController {
         let textField = CustomTextField()
         textField.placeholder = "만 나이"
         textField.tintColor = .clear
+        textField.addTarget(self, action: #selector(tfDidChange), for: .valueChanged)
         return textField
     }()
     
@@ -351,12 +356,14 @@ final class SignupViewController: UIViewController {
     @objc private func tfDidChange() {
         let isValidEmail = if let text = emailTextField.text { text != "" } else { false }
         let isPwSame = isPasswordSame(passwordTextField, passwordConfirmTextField)
-        
+        print("isValidEmail: \(isValidEmail)")
+        print("isPwSame: \(isPwSame)")
+        print("age: \(selectedAge)")
         if isValidEmail
             && isEmailDuplicateChecked
             && !(passwordTextField.text?.isEmpty ?? true)
             && isPwSame
-            && !(ageTextField.text?.isEmpty ?? true){
+            && (selectedAge != nil) {
             signupButton.isActive = true
         }
         else {
@@ -453,6 +460,8 @@ final class SignupViewController: UIViewController {
             
             print("=== Signup, postSignup succeeded ===")
             print("== data: \(data)")
+            
+            UserDefaults.standard.set(true, forKey: "isFirstLaunch")
             
             UserDefaultsManager.shared.setData(value: data.id, key: .id)
             UserDefaultsManager.shared.setData(value: data.uuid, key: .uuid)
