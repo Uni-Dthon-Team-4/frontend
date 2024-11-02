@@ -37,8 +37,8 @@ struct CustomBtn: View {
         self.outerColor = outerColor
     }
     
-    //MARK: - Contents
-    /// 버튼 기본적인 구조
+    
+    
     var body: some View {
         Button(action: {
             action()

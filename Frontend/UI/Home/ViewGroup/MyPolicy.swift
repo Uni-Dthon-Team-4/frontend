@@ -13,6 +13,8 @@ struct MyPolicy: View {
     
     let data: ContentData
     
+    
+    //MARK: - Contents
     var body: some View {
         VStack(spacing: 25){
             titleAndArticle
@@ -23,9 +25,7 @@ struct MyPolicy: View {
         .frame(maxWidth: 357)
     }
     
-    
-    
-    /// 맨의 나를 위한정책과 밑에 뉴스
+    /// 맨의 나를 위한정책글자와 뉴스
     private var titleAndArticle: some View{
         VStack(spacing: 31){
             topTitle
@@ -34,34 +34,34 @@ struct MyPolicy: View {
     }
     
     
+    /// 위에 타이틀 글자
     private var topTitle: some View {
         HStack{
             Text("나를 위한 정책")
                 .font(.Pretendard(size: 24, family: .Bold))
             Spacer()
-        
         }
-        
     }
     
     
+    /// 기사누르면 웹뷰뜨도록 해야함
     private var articleBtn: some View {
-        Button(action: {isSheetPresented = true}, label: {
-            articleLabel
+            Button(action: { isSheetPresented = true }) {
+                articleLabel
+            }
+            .sheet(isPresented: $isSheetPresented) {
+                      if let url = URL(string: data.URL1) {
+                          SafariView(url: url)
+                      }
+                  }
         }
-        )
-        .sheet(isPresented: $isSheetPresented) {
-            SheetView(data: data)
-        }
-    }
     
-    
-    /// 뉴스 내용
+    /// 뉴스 내용담고 있는 텍스트들
     private var articleLabel: some View {
      
         HStack{
             VStack(spacing: 5){
-                myPolicy
+                benefitNews
                 title
                 content
             }
@@ -76,7 +76,8 @@ struct MyPolicy: View {
     
     
     
-    private var myPolicy: some View {
+    /// 도움이 되는 뉴스
+    private var benefitNews: some View {
         HStack{
             Text("도움이 되는 뉴스")
                 .font(.Pretendard(size: 12, family: .SemiBold))
@@ -86,6 +87,7 @@ struct MyPolicy: View {
         
     }
     
+    /// 뉴스 제목
     private var title: some View{
         HStack {
             Text(data.title)
@@ -95,6 +97,7 @@ struct MyPolicy: View {
         }
     }
     
+    /// 뉴스 내용
     private var content: some View{
         HStack{
             Text(data.content)
@@ -106,37 +109,7 @@ struct MyPolicy: View {
     }
     
     
-    
-    private var supplyBtn: some View {
-        HStack {
-            Spacer()
-            CustomBtn(btnText: "지원하기", textColor: .black, textSize: 13, width: 60, height: 30, action: {print("지우너하기")}, innerColor: .white, outerColor: .purple)
-                .padding(.top,3)
-            
-        }
-    }
-    
-    
-   
-    
-    
-    
-    
-    
-    
-    private var articleTitle: some View {
-        VStack(alignment: .leading, spacing: 10){
-            Text("기사 타이틀")
-                .font(.Pretendard(size: 24, family: .Bold))
-                .foregroundStyle(.white)
-            Text("기사 내용,기사 내용,기사 내용,기사 내용")
-                .font(.Pretendard(size: 16, family: .SemiBold))
-                .foregroundStyle(.white)
-        }
-            
-    }
-    
-    
+    /// 아래 청년, 노년 등에 대한 이미지
     private var image: some View {
         ZStack(alignment: .bottomLeading){
             
@@ -161,6 +134,7 @@ struct MyPolicy: View {
 }
 
 
+//MARK: - Preview
 #Preview {
     MyPolicy(data: ContentData(category: policyCategory.job, id: 123, title: "청년취업사관학교", content: "한줄설명한줄설명 한 줄 설 명 한 줄 설 명한 줄 설 명한 줄 설 명한 줄 설 명한 줄 설 명ㅁㄴ어ㅜㅁㄴ아ㅓ무너ㅏ움나ㅓ운머ㅏ우나머", image:  "https://1in.seoul.go.kr/images/front/img_policyInformation2.png", URL1:  "https://youth.gg.go.kr/_attach/gg/editor-image/2023/02/JZPCyzESBWoBWTqKjfINNWWwbm.png", URL2:  "https://youth.gg.go.kr/_attach/gg/editor-image/2023/02/JZPCyzESBWoBWTqKjfINNWWwbm.png"))
     }
