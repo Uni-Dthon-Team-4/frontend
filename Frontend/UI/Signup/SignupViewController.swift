@@ -55,9 +55,10 @@ final class SignupViewController: UIViewController {
         return button
     }()
     
-    private let emailTextField: CustomTextField = {
+    private lazy var emailTextField: CustomTextField = {
         let tf = CustomTextField()
         tf.placeholder = "이메일을 입력해주세요."
+        tf.delegate = self
         tf.addTarget(self, action: #selector(tfDidChange), for: .editingChanged)
         return tf
     }()
@@ -67,6 +68,7 @@ final class SignupViewController: UIViewController {
         label.text = "이미 등록된 이메일이에요."
         label.textColor = .red
         label.font = .Pretendard(size: 12, family: .Medium)
+        label.isHidden = true
         return label
     }()
     
@@ -82,6 +84,8 @@ final class SignupViewController: UIViewController {
     private let passwordTextField: CustomTextField = {
         let tf = CustomTextField()
         tf.placeholder = "비밀번호를 입력해주세요."
+        tf.textContentType = .newPassword
+        tf.isSecureTextEntry = true
         tf.addTarget(self, action: #selector(tfDidChange), for: .editingChanged)
         return tf
     }()
@@ -98,6 +102,7 @@ final class SignupViewController: UIViewController {
     private let passwordConfirmTextField: CustomTextField = {
         let tf = CustomTextField()
         tf.placeholder = "비밀번호를 다시 입력해주세요."
+        tf.isSecureTextEntry = true
         tf.addTarget(self, action: #selector(tfDidChange), for: .editingChanged)
         return tf
     }()
@@ -107,6 +112,7 @@ final class SignupViewController: UIViewController {
         label.text = "비밀번호가 틀렸어요."
         label.textColor = .red
         label.font = .Pretendard(size: 12, family: .Medium)
+        label.isHidden = true
         return label
     }()
     
@@ -330,20 +336,80 @@ final class SignupViewController: UIViewController {
     
     @objc private func exitButtonDidTap() {
         print("exit button tapped")
+        
+        let alertController = UIAlertController(title: "정말 회원가입을 그만하시겠어요?",
+                                                message: "작성 내용은 저장되지 않습니다.",
+                                                preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "취소", style: .cancel))
+        alertController.addAction(UIAlertAction(title: "나가기", style: .destructive, handler: { action in
+            self.dismiss(animated: true)
+        }))
+        
+        self.present(alertController, animated: true)
     }
     
     @objc private func tfDidChange() {
+        let isValidEmail = if let text = emailTextField.text { text != "" } else { false }
+        let isPwSame = isPasswordSame(passwordTextField, passwordConfirmTextField)
         
+        if isValidEmail
+            && isEmailDuplicateChecked
+            && !(passwordTextField.text?.isEmpty ?? true)
+            && isPwSame
+            && !(ageTextField.text?.isEmpty ?? true){
+            signupButton.isActive = true
+        }
+        else {
+            signupButton.isActive = false
+        }
     }
     
     @objc private func checkEmailDuplicateButtonDidTap() {
         print("duplicate button tapped")
-        isEmailDuplicateChecked = true
-        if isEmailDuplicateChecked {
-            print("if")
-            checkEmailDuplicateButton.isActive = false
+        let email = emailTextField.text
+        
+        if email != "" {
+            let request = CheckDuplicateRequestDTO(userId: email!)
+            print("request: \(request)")
+            
+            CheckDuplicateService.getEmailDuplicateCheck(request: request) { [weak self] succeed, failed in
+                guard let succeed = succeed else {
+                    // 에러가 난 경우, alert 창 present
+                    switch failed {
+                    case .disconnected:
+                        self?.present(UIAlertController.networkErrorAlert(title: failed!.localizedDescription), animated: true)
+                    case .serverError:
+                        self?.present(UIAlertController.networkErrorAlert(title: failed!.localizedDescription), animated: true)
+                    case .unknownError:
+                        self?.present(UIAlertController.networkErrorAlert(title: failed!.localizedDescription), animated: true)
+                    default:
+                        self?.present(UIAlertController.networkErrorAlert(title: "요청에 실패하였습니다."), animated: true)
+                    }
+                    return
+                }
+                print("=== Signup, check duplicate data succeeded ===")
+                print("== data: \(succeed)")
+                
+                // 중복 체크 통과했을 때
+                if succeed {
+                    self?.isEmailDuplicateChecked = true
+                    self?.checkEmailDuplicateButton.isActive = false
+                    self?.tfDidChange()
+//                    let alert = UIAlertController(title: "중복되지 않는 이메일입니다!", message: nil, preferredStyle: .alert)
+//                    alert.addAction(UIAlertAction(title: "확인", style: .default))
+//                    self?.present(alert, animated: true)
+                }
+                else {
+                    self?.emailNotValidLabel.isHidden = false
+                }
+                print("isEmailDuplicateChecked: \(self?.isEmailDuplicateChecked)")
+            }
         }
-        print("isEmailDuplicateChecked: \(isEmailDuplicateChecked)")
+        else {
+            let alert = UIAlertController(title: "이메일을 입력해주세요!", message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .default))
+            self.present(alert, animated: true)
+        }
     }
     
     @objc private func pickerDoneButtonDidTap() {
@@ -376,6 +442,27 @@ final class SignupViewController: UIViewController {
         
         agePicker.delegate = self
         agePicker.dataSource = self
+    }
+    
+    private func isPasswordSame(_ first: UITextField,_ second: UITextField) -> Bool {
+        // 두 텍스트필드 값이 같을 때 true
+        if(first.text == second.text) {
+            passwordNotValidLabel.isHidden = true
+            return true
+        }
+        // 두 텍스트필드 값이 다를 때
+        else {
+            // 비번 확인 창이 비어있으면 확인 불가하므로 false
+            if second.text == "" {
+                passwordNotValidLabel.isHidden = true
+                return false
+            }
+            // 비번 확인 창 내용이 있으면 값이 다른 거이므로 false
+            else {
+                passwordNotValidLabel.isHidden = false
+                return false
+            }
+        }
     }
     
     private func createLayoutSection() -> NSCollectionLayoutSection {
@@ -463,6 +550,14 @@ extension SignupViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return minimumInteritemSpacing
+    }
+}
+
+// MARK: - Extension: Textfield
+
+extension SignupViewController: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return isEmailDuplicateChecked ? false : true
     }
 }
 
