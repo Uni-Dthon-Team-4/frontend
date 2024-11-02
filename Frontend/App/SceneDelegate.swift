@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // 화면을 구성하는 UIWindow
         window = UIWindow(windowScene: windowScene)
         // 실제 실행 시 처음으로 보여질 뷰컨트롤러
-        let tabBarController = ViewController()
+        let tabBarController = TabBarViewController()
         
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
