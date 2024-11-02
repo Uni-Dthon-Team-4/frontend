@@ -173,7 +173,6 @@ final class SignupViewController: UIViewController {
         view.backgroundColor = .white
         
         configAgeTextField()
-//        configInterestCollectionView()
         
         setupTitleLabel()
         setupExitButton()
@@ -188,14 +187,6 @@ final class SignupViewController: UIViewController {
         setupInterestCollectionView()
         setupSignupButton()
     }
-    
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//        
-//        print(interestCollectionView.frame)
-//        
-//        interestCollectionView.reloadData()
-//    }
     
     // MARK: - Layout
     
@@ -387,26 +378,6 @@ final class SignupViewController: UIViewController {
         agePicker.dataSource = self
     }
     
-//    private func configInterestCollectionView() {
-//        let flowLayout = UICollectionViewFlowLayout()
-//        flowLayout.scrollDirection = .vertical
-//        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-//        flowLayout.minimumLineSpacing = minimumLineSpacing
-//        flowLayout.minimumInteritemSpacing = minimumInteritemSpacing
-//        flowLayout.estimatedItemSize = CGSize(width: 79, height: 35)
-//        
-//        /// MyCollectionView()로 단순히 초기화하면 에러가 나므로 MyCollectionView(frame:collectionViewLayout:) 초기화 사용
-//        /// 만약 collectionViewLayer에 UICollectionViewLayout() 그대로 넣으면 `cellForItemAt`가 불리지 않으므로 주의
-//        interestCollectionView = CustomCollectionView(frame: .zero, collectionViewLayout: flowLayout)
-//        interestCollectionView!.backgroundColor = .lightGray
-////        view.addSubview(myCollectionView)
-//        
-//        interestCollectionView!.register(InterestCollectionViewCell.self, forCellWithReuseIdentifier: InterestCollectionViewCell.identifier)
-//        
-//        interestCollectionView!.delegate = self
-//        interestCollectionView!.dataSource = self
-//    }
-    
     private func createLayoutSection() -> NSCollectionLayoutSection {
         // 아이템 크기를 콘텐츠에 맞게 조절
         let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(80), heightDimension: .estimated(35))
@@ -456,11 +427,8 @@ extension SignupViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InterestCollectionViewCell.identifier, for: indexPath) as? InterestCollectionViewCell
-//        else { return UICollectionViewCell() }
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InterestCollectionViewCell.identifier, for: indexPath) as? InterestCollectionViewCell else {
-            fatalError("Cell could not be dequeued as InterestCollectionViewCell")
-        }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InterestCollectionViewCell.identifier, for: indexPath) as? InterestCollectionViewCell
+        else { return UICollectionViewCell() }
         cell.configure(with: interestArray[indexPath.item])
         return cell
     }
@@ -485,18 +453,6 @@ extension SignupViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         print("size for item at: \(indexPath)")
-//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InterestCollectionViewCell.identifier, for: indexPath) as? InterestCollectionViewCell
-//        else { return .zero }
-//        guard let cell = collectionView.cellForItem(at: indexPath) as? InterestCollectionViewCell else { return .zero }
-//        print("cell: \(cell)")
-//        cell.configure(with: interestArray[indexPath.item])
-//        
-//        let interestLabelFrame = cell.getInterestLabelFrame()
-//        let cellHeight = interestLabelFrame.height + 13
-//        let cellWidth = 15 + interestLabelFrame.width + 15
-//        print("indexPath: \(indexPath)의 셀 크기는 \(cellWidth), \(cellHeight)")
-//
-//        return CGSize(width: cellWidth, height: cellHeight)
         
         return UICollectionViewFlowLayout.automaticSize
     }
