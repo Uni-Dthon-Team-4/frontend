@@ -25,7 +25,7 @@ extension HomeCategoryAPITarget: BaseAPI {
     var path: String {
         switch self {
         case .getPoliciesByAge:
-            return "/api/policies/by-age"
+            return "api/policies/by-age"
         }
     }
 
@@ -39,7 +39,11 @@ extension HomeCategoryAPITarget: BaseAPI {
     var headers: HTTPHeaders? {
         switch self {
         case .getPoliciesByAge(let request):
-            return ["uuid": request.uuid]
+            return [
+                "ngrok-skip-browser-warning": "true",
+                "uuid": request.uuid,
+                "Content-Type": "application/json"
+            ]
         }
     }
 }

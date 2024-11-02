@@ -17,7 +17,7 @@ struct CategoryPolicy: View {
             categorySegment
             policyList
                 .onAppear {
-                    viewModel.fetchPolicies(uuid: "your-uuid", category: selectedCategory.rawValue)
+                    viewModel.fetchPolicies(uuid: "d93bd8f4-39b4-42e6-8aa3-77db9f6429da", category: selectedCategory.rawValue)
                 }
             Spacer()
         }
@@ -28,7 +28,7 @@ struct CategoryPolicy: View {
             ForEach(policyCategory.allCases, id: \.self) { category in
                 Button(action: {
                     selectedCategory = category
-                    viewModel.fetchPolicies(uuid: "your-uuid", category: selectedCategory.rawValue)
+                    viewModel.fetchPolicies(uuid: "d93bd8f4-39b4-42e6-8aa3-77db9f6429da", category: selectedCategory.rawValue)
                 }) {
                     HStack {
                         Text("✨ \(category.toKorean())")

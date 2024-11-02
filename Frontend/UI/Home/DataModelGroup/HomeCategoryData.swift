@@ -27,4 +27,15 @@ struct HomeCategoryResponseData: Identifiable, Codable {
     let applyUrl: String
     
     var id: Int { policyId }
+    
+    private enum CodingKeys: String, CodingKey {
+            case policyId = "policyId"
+            case isScrapped = "isScrapped"
+            case name = "name"
+            case description = "description"
+            case category = "category"
+            case age = "age"
+            case url = "url"
+            case applyUrl = "applyUrl"
+        }
 }

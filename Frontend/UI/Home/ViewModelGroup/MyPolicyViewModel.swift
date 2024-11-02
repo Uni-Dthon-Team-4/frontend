@@ -4,7 +4,6 @@
 //
 //  Created by 한지강 on 11/3/24.
 //
-
 import SwiftUI
 import Alamofire
 
@@ -13,14 +12,18 @@ class MyPolicyViewModel: ObservableObject {
     @Published var policies: [HomeMyPolicyResponseData] = []
     
     private let provider = NetworkService.shared
+    
+    var randomPolicy: HomeMyPolicyResponseData? {
+        policies.randomElement()
+    }
 
-    func fetchPolicies(keyword: String) async {
+    func fetchPolicies(keyword: String) {
         let request = HomeMyPolicyRequest(keyword: keyword)
         
         provider.request(HomeMyPolicyAPITarget.searchPolicies(request)) { [weak self] result in
             switch result {
             case .success(let response):
-                DispatchQueue.main.async {
+                Task {
                     self?.policies = response.data
                 }
             case .failure(let error):

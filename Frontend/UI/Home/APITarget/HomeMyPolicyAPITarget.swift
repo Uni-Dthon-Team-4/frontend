@@ -24,7 +24,7 @@ extension HomeMyPolicyAPITarget: BaseAPI {
     var path: String {
         switch self {
         case .searchPolicies:
-            return "/api/policies/search"
+            return "api/policies/search"
         }
     }
 
@@ -36,12 +36,9 @@ extension HomeMyPolicyAPITarget: BaseAPI {
     }
     
     var headers: HTTPHeaders? {
-        switch self {
-        case .searchPolicies:
-            return [
-                "ngrok-skip-browser-warning": "true",
-                "accept": "application/json" 
-            ]
-        }
+        return [
+            "ngrok-skip-browser-warning": "true",
+            "Content-Type": ContentType.json.rawValue
+        ]
     }
 }
