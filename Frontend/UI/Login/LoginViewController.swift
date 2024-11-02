@@ -30,6 +30,7 @@ final class LoginViewController: UIViewController {
     private let passwordTextField: CustomTextField = {
         let tf = CustomTextField()
         tf.placeholder = "비밀번호를 입력해주세요."
+        tf.isSecureTextEntry = true
         tf.addTarget(self, action: #selector(tfDidChange), for: .editingChanged)
         return tf
     }()
@@ -175,6 +176,40 @@ final class LoginViewController: UIViewController {
     
     @objc private func loginButtonDidTap() {
         print("login button tapped")
+        
+        let email = emailTextField.text
+        let password = passwordTextField.text
+        
+        let request = LoginRequestDTO(userId: email!, password: password!)
+        
+        LoginService.postLogin(request: request) { [weak self] succeed, failed in
+            guard let data = succeed else {
+                // 에러가 난 경우, alert 창 present
+                switch failed {
+                case .disconnected:
+                    self?.present(UIAlertController.networkErrorAlert(title: failed!.localizedDescription), animated: true)
+                default:
+                    self?.present(UIAlertController.networkErrorAlert(title: "로그인에 실패하였습니다."), animated: true)
+                }
+                return
+            }
+            
+            print("=== LoginVC, loginButtonDidTap succeeded ===")
+            print("== data: \(data)")
+            
+            // 만약 실패한 경우 실패했다고 알림창
+            UserDefaults.standard.set(true, forKey: "isFirstLaunch")
+            UserDefaults.standard.synchronize()
+            
+            UserDefaultsManager.shared.setData(value: data.id, key: .id)
+            UserDefaultsManager.shared.setData(value: data.uuid, key: .uuid)
+            UserDefaultsManager.shared.setData(value: data.age, key: .age)
+            UserDefaultsManager.shared.setData(value: data.keyword1 ?? "", key: .keyword1)
+            UserDefaultsManager.shared.setData(value: data.keyword2 ?? "", key: .keyword2)
+            UserDefaultsManager.shared.setData(value: data.keyword3 ?? "", key: .keyword3)
+            
+            self?.moveToHomeVC()
+        }
     }
     
     @objc private func signupButtonDidTap() {
@@ -193,6 +228,12 @@ final class LoginViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
+    }
+    
+    private func moveToHomeVC() {
+        DispatchQueue.main.async {
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVcTo(TabBarViewController(), animated: false)
+        }
     }
 }
 
