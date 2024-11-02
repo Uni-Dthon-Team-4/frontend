@@ -15,7 +15,6 @@ struct CategoryPolicy: View {
             categorySegment
             policyList
                 .task {
-                    // View가 나타날 때 기본 데이터를 로드
                     await fetchData()
                 }
             Spacer()
@@ -24,7 +23,7 @@ struct CategoryPolicy: View {
     
     private func fetchData() async {
         do {
-            try await viewModel.fetchPolicies(uuid: "d93bd8f4-39b4-42e6-8aa3-77db9f6429da", category: selectedCategory.rawValue)
+            try await viewModel.fetchPolicies(category: selectedCategory.rawValue)
         } catch {
             print("❌ 데이터 로드 중 오류 발생: \(error.localizedDescription)")
         }

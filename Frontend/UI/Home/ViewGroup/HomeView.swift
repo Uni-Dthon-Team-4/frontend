@@ -15,16 +15,16 @@ struct HomeView: View {
         ScrollView {
             VStack {
                 MyPolicy()
-                    .environmentObject(myPolicyViewModel) // MyPolicy에 ViewModel 주입
+                    .environmentObject(myPolicyViewModel)
                     .onAppear {
-                        myPolicyViewModel.fetchPolicies(keyword: "청년")
+                        myPolicyViewModel.fetchPolicies()
                     }
                 
                 CategoryPolicy()
-                    .environmentObject(categoryPolicyViewModel) // CategoryPolicy에 ViewModel 주입
+                    .environmentObject(categoryPolicyViewModel)
                     .onAppear {
                         Task {
-                            try? await categoryPolicyViewModel.fetchPolicies(uuid: "d93bd8f4-39b4-42e6-8aa3-77db9f6429da", category: "JOB")
+                            try? await categoryPolicyViewModel.fetchPolicies(category: "JOB")
                         }
                     }
             }
@@ -32,9 +32,9 @@ struct HomeView: View {
         .frame(maxWidth: 357)
         .refreshable {
             // 새로고침 시 데이터 다시 가져오기
-            myPolicyViewModel.fetchPolicies(keyword: "청년")
+            myPolicyViewModel.fetchPolicies()
             Task {
-                try? await categoryPolicyViewModel.fetchPolicies(uuid: "d93bd8f4-39b4-42e6-8aa3-77db9f6429da", category: "JOB")
+                try? await categoryPolicyViewModel.fetchPolicies(category: "JOB")
             }
         }
     }

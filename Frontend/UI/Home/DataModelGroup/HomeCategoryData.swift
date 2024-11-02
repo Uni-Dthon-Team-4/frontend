@@ -6,7 +6,7 @@
 //
 
 struct HomeCategoryRequest: Codable {
-    var uuid: String = "d93bd8f4-39b4-42e6-8aa3-77db9f6429da"
+    var uuid: String
     let category: String
 }
 

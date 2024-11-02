@@ -33,7 +33,7 @@ struct MyPolicy: View {
             Spacer()
         }
         .onAppear {
-            viewModel.fetchPolicies(keyword: "청년")
+            viewModel.fetchPolicies()
         }
         .frame(maxWidth: 357)
     }

@@ -1,10 +1,9 @@
 //
-//  categoryPolicyViewModel.swift
+//  CategoryPolicyViewModel.swift
 //  Frontend
 //
 //  Created by 한지강 on 11/2/24.
 //
-
 
 import SwiftUI
 import Alamofire
@@ -14,7 +13,16 @@ class CategoryPolicyViewModel: ObservableObject {
     @Published var policies: [HomeCategoryResponseData] = []
     private let networkService = NetworkService.shared
     
-    func fetchPolicies(uuid: String, category: String) {
+    func fetchPolicies(category: String) async throws {
+        // UserDefaults에서 UUID를 가져오기
+        let uuid = UserDefaultsManager.shared.getData(type: String.self, forKey: .uuid)
+        guard !uuid.isEmpty else {
+            print("❌ UUID가 설정되어 있지 않습니다. 정책을 불러오지 않습니다.")
+            return
+        }
+        
+        print("✅ Fetched UUID from UserDefaults: \(uuid)")
+
         let request = HomeCategoryRequest(uuid: uuid, category: category)
         let target = HomeCategoryAPITarget.getPoliciesByAge(request)
         
@@ -24,7 +32,7 @@ class CategoryPolicyViewModel: ObservableObject {
             print("Request Headers: \(urlRequest.allHTTPHeaderFields ?? [:])")
             print("Request Method: \(urlRequest.httpMethod ?? "No Method")")
         } catch {
-            print("Failed to create URLRequest: \(error)")
+            print("❌ Failed to create URLRequest: \(error)")
             return
         }
         

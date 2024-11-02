@@ -208,6 +208,19 @@ final class LoginViewController: UIViewController {
             UserDefaultsManager.shared.setData(value: data.keyword2 ?? "", key: .keyword2)
             UserDefaultsManager.shared.setData(value: data.keyword3 ?? "", key: .keyword3)
             
+            print("회원가입 후 저장된 UUID: \(UserDefaultsManager.shared.getData(type: String.self, forKey: .uuid))")
+            UserDefaults.standard.set(data.uuid, forKey: "uuid")
+            //UserDefaults.standard.synchronize()
+
+            if let savedUUID = UserDefaults.standard.string(forKey: "uuid") {
+                print("회원가입 후 저장된 UUID: \(savedUUID)")
+            } else {
+                print("UUID 저장에 실패했습니다.")
+            }
+
+
+
+            
             self?.moveToHomeVC()
         }
     }
