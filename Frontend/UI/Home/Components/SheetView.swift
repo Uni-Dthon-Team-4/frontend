@@ -11,11 +11,12 @@ struct SheetView: View {
     @State private var showWebView = false
     @State private var webURL: URL?
     let data: HomeCategoryResponseData
+
     var body: some View {
         VStack(spacing: 15) {
             Text("더 알아보기")
                 .font(.Pretendard(size: 18, family: .Bold))
-                .padding(.vertical, 12)
+                .padding(.top, 15)
             allContent
         }
         .sheet(isPresented: $showWebView) {
@@ -37,7 +38,16 @@ struct SheetView: View {
 
     private var articleImage: some View {
         ZStack(alignment: .bottomLeading) {
-            if let url = URL(string: data.url) {
+            if let ageGroup = ageEnum(rawValue: data.age) {
+                Image(ageGroup.imageName)
+                    .resizable()
+                    .frame(width: 355, height: 125)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.clear)
+                    )
+            } else if let url = URL(string: data.url) {
                 KFImage(url)
                     .placeholder {
                         ProgressView()
@@ -56,7 +66,8 @@ struct SheetView: View {
     }
 
     private var title: some View {
-        Text(data.name)            .font(.Pretendard(size: 16, family: .Bold))
+        Text(data.name)
+            .font(.Pretendard(size: 16, family: .Bold))
             .frame(maxHeight: 22)
     }
 

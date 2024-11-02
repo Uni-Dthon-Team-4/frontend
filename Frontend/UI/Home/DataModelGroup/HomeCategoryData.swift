@@ -6,7 +6,7 @@
 //
 
 struct HomeCategoryRequest: Codable {
-    let uuid: String
+    var uuid: String = "d93bd8f4-39b4-42e6-8aa3-77db9f6429da"
     let category: String
 }
 
@@ -29,13 +29,13 @@ struct HomeCategoryResponseData: Identifiable, Codable {
     var id: Int { policyId }
     
     private enum CodingKeys: String, CodingKey {
-            case policyId = "policyId"
-            case isScrapped = "isScrapped"
-            case name = "name"
-            case description = "description"
-            case category = "category"
-            case age = "age"
-            case url = "url"
-            case applyUrl = "applyUrl"
-        }
+        case policyId = "policyId"
+        case isScrapped = "isScraped"
+        case name = "name"
+        case description = "description"
+        case category = "category"
+        case age = "age"
+        case url = "url"
+        case applyUrl = "applyUrl"
+    }
 }

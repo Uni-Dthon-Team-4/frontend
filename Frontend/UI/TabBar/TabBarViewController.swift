@@ -39,7 +39,7 @@ final class TabBarViewController: UITabBarController {
     /// 탭바와 연결될 뷰컨트롤러 세팅하는 함수
     private func setTabViewControllers() {
         // TODO: 각각 맡은 페이지 구현 방식에 따라 수정 필요
-        let homeNavVC = UINavigationController(rootViewController: UIHostingController(rootView: HomeView(data: ContentData(category: .job, id: 1, title: "청년취업사관학교", content: "서울시에서 SW인재 양성을 위해어쩌구 저쩌구 글을 넣어보자~...", image: "https://1in.seoul.go.kr/images/front/img_policyInformation2.png", URL1: "https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=0&ie=utf8&query=청년취업사관학교", URL2: ""))))
+        let homeNavVC = UINavigationController(rootViewController: UIHostingController(rootView: HomeView()))
         let classNavVC = UINavigationController(rootViewController: ClassViewController())
         let searchNavVC = UINavigationController(rootViewController: SearchViewController())
         

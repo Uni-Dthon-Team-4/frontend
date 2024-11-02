@@ -10,7 +10,7 @@ import Foundation
 enum ageEnum: String {
     case youth = "YOUTH"
     case middleAged = "MIDDLE_AGED"
-    case old = "OLD"
+    case old = "SENIOR"
 
     var imageName: String {
         switch self {
@@ -19,7 +19,7 @@ enum ageEnum: String {
         case .middleAged:
             return "MIDDLE_AGED"
         case .old:
-            return "OLD"
+            return "SENIOR"
         }
     }
     

@@ -14,7 +14,6 @@ class CategoryPolicyViewModel: ObservableObject {
     @Published var policies: [HomeCategoryResponseData] = []
     private let networkService = NetworkService.shared
     
-    // 정책 데이터 가져오기
     func fetchPolicies(uuid: String, category: String) {
         let request = HomeCategoryRequest(uuid: uuid, category: category)
         let target = HomeCategoryAPITarget.getPoliciesByAge(request)
@@ -38,14 +37,14 @@ class CategoryPolicyViewModel: ObservableObject {
                 }
             case .failure(let error):
                 print("❌ 데이터 가져오는 중 오류 발생: \(error.localizedDescription)")
+                
                 if case .unableToDecode = error {
                     print("⚠️ 디코딩 실패, 응답 형식이 예상과 다릅니다.")
-                } else if case .clientError = error {
-                    print("⚠️ 클라이언트 오류 발생. 요청을 확인하세요.")
-                } else if case .serverError = error {
-                    print("⚠️ 서버 오류 발생. 서버 상태를 확인하세요.")
-                } else {
-                    print("⚠️ 기타 오류 발생: \(error)")
+                    
+                    if let errorData = try? JSONSerialization.data(withJSONObject: ["error": error.localizedDescription], options: []),
+                       let jsonString = String(data: errorData, encoding: .utf8) {
+                        print("UTF-8 형식으로 변환된 에러 데이터: \(jsonString)")
+                    }
                 }
             }
         }

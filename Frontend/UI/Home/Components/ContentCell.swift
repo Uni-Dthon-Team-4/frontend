@@ -4,7 +4,6 @@
 //
 //  Created by 한지강 on 11/2/24.
 //
-
 import SwiftUI
 
 struct ContentCell: View {
@@ -58,7 +57,6 @@ struct ContentCell: View {
     }
 }
 
-//MARK: - Preview
 #Preview {
     ContentCell(data: HomeCategoryResponseData(
         policyId: 123,
@@ -66,7 +64,7 @@ struct ContentCell: View {
         name: "청년취업사관학교",
         description: "서울시에서 SW인재 양성을 위해어쩌구 ~저ㅓ쩌구~ 2줄 넘어가는지 확인하자~",
         category: "JOB",
-        age: "MIDDLE_AGED",
+        age: "YOUTH",
         url: "https://youth.gg.go.kr/_attach/gg/editor-image/2023/02/JZPCyzESBWoBWTqKjfINNWWwbm.png",
         applyUrl: "https://youth.gg.go.kr/_attach/gg/editor-image/2023/02/JZPCyzESBWoBWTqKjfINNWWwbm.png"
     ))

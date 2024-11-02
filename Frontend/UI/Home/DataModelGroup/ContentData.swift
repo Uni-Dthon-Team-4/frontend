@@ -20,7 +20,7 @@ struct ContentData: Identifiable,Codable {
 enum policyCategory: String, Codable, CaseIterable {
     case job = "JOB"
     case education = "EDUCATION"
-    case dwelling = "DWELLING"
+    case dwelling = "LIVING"
     case welfare = "WELFARE"
     
     

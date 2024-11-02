@@ -42,7 +42,7 @@ extension HomeCategoryAPITarget: BaseAPI {
             return [
                 "ngrok-skip-browser-warning": "true",
                 "uuid": request.uuid,
-                "Content-Type": "application/json"
+                "Content-Type": ContentType.json.rawValue
             ]
         }
     }
