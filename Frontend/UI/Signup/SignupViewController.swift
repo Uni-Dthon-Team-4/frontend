@@ -401,6 +401,7 @@ final class SignupViewController: UIViewController {
                 if succeed {
                     self?.isEmailDuplicateChecked = true
                     self?.checkEmailDuplicateButton.isActive = false
+                    self?.emailNotValidLabel.isHidden = true
                     self?.tfDidChange()
 //                    let alert = UIAlertController(title: "중복되지 않는 이메일입니다!", message: nil, preferredStyle: .alert)
 //                    alert.addAction(UIAlertAction(title: "확인", style: .default))
@@ -462,6 +463,7 @@ final class SignupViewController: UIViewController {
             print("== data: \(data)")
             
             UserDefaults.standard.set(true, forKey: "isFirstLaunch")
+            UserDefaults.standard.synchronize()
             
             UserDefaultsManager.shared.setData(value: data.id, key: .id)
             UserDefaultsManager.shared.setData(value: data.uuid, key: .uuid)
