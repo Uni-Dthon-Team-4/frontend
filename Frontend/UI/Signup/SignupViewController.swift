@@ -18,7 +18,7 @@ final class SignupViewController: UIViewController {
     private let ageArray: [Int] = Array(1...99)
     private var selectedAge: Int?
     
-    private let interestArray: [String] = ["청년", "취업", "창업", "교육"/*, "장학금", "중장년", "경제", "노인", "사업", "주택", "지원", "저소득"*/]
+    private let interestArray: [String] = ["청년", "취업", "창업", "교육", "장학금", "중장년", "경제", "노인", "사업", "주택", "지원", "저소득"]
     private let minimumLineSpacing: CGFloat = 10
     private let minimumInteritemSpacing: CGFloat = 10
     private var selectedInterestArray: Set<String> = []
@@ -147,19 +147,22 @@ final class SignupViewController: UIViewController {
     }()
     
     private lazy var interestCollectionView: UICollectionView = {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .vertical
-        flowLayout.minimumLineSpacing = minimumLineSpacing
-        flowLayout.minimumInteritemSpacing = minimumInteritemSpacing
-        flowLayout.estimatedItemSize = CGSize(width: 79, height: 35)
+        let layout = UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
+            return self.createLayoutSection()
+        }
         
-        let view = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-        view.dataSource = self
-        view.delegate = self
-        view.allowsMultipleSelection = true
-        view.register(InterestCollectionViewCell.self,
-                      forCellWithReuseIdentifier: InterestCollectionViewCell.identifier)
-        return view
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.register(InterestCollectionViewCell.self, forCellWithReuseIdentifier: InterestCollectionViewCell.identifier)
+        collectionView.allowsMultipleSelection = true
+        return collectionView
+    }()
+    
+    private let signupButton: NextButton = {
+        let button = NextButton(title: "회원가입")
+        button.addTarget(self, action: #selector(signupButtonDidTap), for: .touchUpInside)
+        return button
     }()
     
     // MARK: - Lifecycle
@@ -170,6 +173,7 @@ final class SignupViewController: UIViewController {
         view.backgroundColor = .white
         
         configAgeTextField()
+//        configInterestCollectionView()
         
         setupTitleLabel()
         setupExitButton()
@@ -182,15 +186,16 @@ final class SignupViewController: UIViewController {
         setupInterestLabel()
         setupInterestGuideLabel()
         setupInterestCollectionView()
+        setupSignupButton()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        print(interestCollectionView.frame)
-        
-        interestCollectionView.reloadData()
-    }
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//        
+//        print(interestCollectionView.frame)
+//        
+//        interestCollectionView.reloadData()
+//    }
     
     // MARK: - Layout
     
@@ -317,7 +322,16 @@ final class SignupViewController: UIViewController {
         interestCollectionView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(ageTextField)
             make.top.equalTo(interestGuideLabel.snp.bottom).offset(20)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+        }
+    }
+    
+    private func setupSignupButton() {
+        view.addSubview(signupButton)
+        
+        signupButton.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(interestCollectionView)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(15)
+            make.top.equalTo(interestCollectionView.snp.bottom).offset(10)
         }
     }
     
@@ -355,6 +369,10 @@ final class SignupViewController: UIViewController {
         ageTextField.resignFirstResponder()
     }
     
+    @objc private func signupButtonDidTap() {
+        print("signup button tapped")
+    }
+    
     // MARK: - Functions
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -367,6 +385,43 @@ final class SignupViewController: UIViewController {
         
         agePicker.delegate = self
         agePicker.dataSource = self
+    }
+    
+//    private func configInterestCollectionView() {
+//        let flowLayout = UICollectionViewFlowLayout()
+//        flowLayout.scrollDirection = .vertical
+//        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+//        flowLayout.minimumLineSpacing = minimumLineSpacing
+//        flowLayout.minimumInteritemSpacing = minimumInteritemSpacing
+//        flowLayout.estimatedItemSize = CGSize(width: 79, height: 35)
+//        
+//        /// MyCollectionView()로 단순히 초기화하면 에러가 나므로 MyCollectionView(frame:collectionViewLayout:) 초기화 사용
+//        /// 만약 collectionViewLayer에 UICollectionViewLayout() 그대로 넣으면 `cellForItemAt`가 불리지 않으므로 주의
+//        interestCollectionView = CustomCollectionView(frame: .zero, collectionViewLayout: flowLayout)
+//        interestCollectionView!.backgroundColor = .lightGray
+////        view.addSubview(myCollectionView)
+//        
+//        interestCollectionView!.register(InterestCollectionViewCell.self, forCellWithReuseIdentifier: InterestCollectionViewCell.identifier)
+//        
+//        interestCollectionView!.delegate = self
+//        interestCollectionView!.dataSource = self
+//    }
+    
+    private func createLayoutSection() -> NSCollectionLayoutSection {
+        // 아이템 크기를 콘텐츠에 맞게 조절
+        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(80), heightDimension: .estimated(35))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        // 그룹을 가로 방향으로 설정하고, 아이템을 포함
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(35))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.interItemSpacing = .fixed(10) // 아이템 간의 간격 설정
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 10 // 그룹 간의 간격 설정
+        //section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16) // 섹션 여백 설정
+
+        return section
     }
 }
 
@@ -397,7 +452,6 @@ extension SignupViewController: UIPickerViewDelegate, UIPickerViewDataSource {
 extension SignupViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("numberOfItems: \(interestArray.count)")
         return interestArray.count
     }
     
@@ -433,16 +487,18 @@ extension SignupViewController: UICollectionViewDelegate, UICollectionViewDataSo
         print("size for item at: \(indexPath)")
 //        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InterestCollectionViewCell.identifier, for: indexPath) as? InterestCollectionViewCell
 //        else { return .zero }
-        guard let cell = collectionView.cellForItem(at: indexPath) as? InterestCollectionViewCell else { return .zero }
-        print("cell: \(cell)")
-        cell.configure(with: interestArray[indexPath.item])
+//        guard let cell = collectionView.cellForItem(at: indexPath) as? InterestCollectionViewCell else { return .zero }
+//        print("cell: \(cell)")
+//        cell.configure(with: interestArray[indexPath.item])
+//        
+//        let interestLabelFrame = cell.getInterestLabelFrame()
+//        let cellHeight = interestLabelFrame.height + 13
+//        let cellWidth = 15 + interestLabelFrame.width + 15
+//        print("indexPath: \(indexPath)의 셀 크기는 \(cellWidth), \(cellHeight)")
+//
+//        return CGSize(width: cellWidth, height: cellHeight)
         
-        let interestLabelFrame = cell.getInterestLabelFrame()
-        let cellHeight = interestLabelFrame.height + 13
-        let cellWidth = 15 + interestLabelFrame.width + 15
-        print("indexPath: \(indexPath)의 셀 크기는 \(cellWidth), \(cellHeight)")
-
-        return CGSize(width: cellWidth, height: cellHeight)
+        return UICollectionViewFlowLayout.automaticSize
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {

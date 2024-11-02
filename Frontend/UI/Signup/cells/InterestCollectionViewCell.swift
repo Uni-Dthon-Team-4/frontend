@@ -32,6 +32,7 @@ final class InterestCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.text = "✨ 관심사"
         label.font = .Pretendard(size: 16, family: .SemiBold)
+        label.numberOfLines = 0
         return label
     }()
     
@@ -58,7 +59,7 @@ final class InterestCollectionViewCell: UICollectionViewCell {
         
         interestLabel.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(15)
-            make.top.bottom.equalToSuperview().offset(6.5)
+            make.top.bottom.equalToSuperview().inset(6.5)
         }
     }
     
@@ -66,7 +67,7 @@ final class InterestCollectionViewCell: UICollectionViewCell {
     
     func configure(with interest: String) {
         print("configuring, with : \(interest)")
-        interestLabel.text = interest
+        interestLabel.text = "✨ \(interest)"
         interestLabel.sizeToFit()
     }
     
