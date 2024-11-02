@@ -15,7 +15,7 @@ struct SheetView: View {
         VStack(spacing: 15) {
             Text("더 알아보기")
                 .font(.Pretendard(size: 18, family: .Bold))
-                .padding(.top, 10)
+                .padding(.vertical, 12)
             allContent
         }
         .sheet(isPresented: $showWebView) {
@@ -32,6 +32,7 @@ struct SheetView: View {
             content
             btnSet
         }
+        .frame(maxWidth: 353)
     }
 
     private var articleImage: some View {
@@ -71,19 +72,19 @@ struct SheetView: View {
 
     private var btnSet: some View {
         HStack(spacing: 19) {
-            CustomBtn(btnText: "자세히보기", textColor: .purple, textSize: 18, width: 167, height: 49, action: {
-                if let url = URL(string: data.url) {  // Changed from data.URL1 to data.url
+            CustomBtn(btnText: "자세히보기", textColor: .white, textSize: 18, width: 167, height: 49, action: {
+                if let url = URL(string: data.url) {
                     webURL = url
                     showWebView = true
                 }
-            }, innerColor: .indigo, outerColor: .purple)
+            }, innerColor: .cPrimary, outerColor: .cPrimary)
 
-            CustomBtn(btnText: "신청하기", textColor: .purple, textSize: 18, width: 167, height: 49, action: {
+            CustomBtn(btnText: "신청하기", textColor: .cPrimary, textSize: 18, width: 167, height: 49, action: {
                 if let url = URL(string: data.applyUrl) {
                     webURL = url
                     showWebView = true
                 }
-            }, innerColor: .white, outerColor: .purple)
+            }, innerColor: Color(.cPrimaryContainer), outerColor: .cPrimary)
         }
     }
 }

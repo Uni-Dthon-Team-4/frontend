@@ -70,7 +70,7 @@ struct MyPolicy: View {
         }
         .frame(width: 335, height: 89)
         .padding(10)
-        .background(Color.gray.opacity(0.1))
+        .background(Color(.cPrimaryContainer))
         .clipShape(RoundedRectangle(cornerRadius: 10))
     }
     
@@ -81,6 +81,7 @@ struct MyPolicy: View {
         HStack{
             Text("도움이 되는 뉴스")
                 .font(.Pretendard(size: 12, family: .SemiBold))
+                .foregroundStyle(Color(.cOnPrimaryContainer))
             Spacer()
         }
         
@@ -92,6 +93,7 @@ struct MyPolicy: View {
         HStack {
             Text(data.title)
                 .font(.Pretendard(size: 20, family: .SemiBold))
+                .foregroundStyle(Color(.cOnSurface))
             Spacer()
          
         }
@@ -102,6 +104,7 @@ struct MyPolicy: View {
         HStack{
             Text(data.content)
                 .font(.Pretendard(size: 14, family: .Medium))
+                .foregroundStyle(Color(.cOnSurface))
                 .lineLimit(1)
             Spacer()
         }

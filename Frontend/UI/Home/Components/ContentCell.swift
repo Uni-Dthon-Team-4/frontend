@@ -50,9 +50,9 @@ struct ContentCell: View {
     private var supplyBtn: some View {
         HStack {
             Spacer()
-            CustomBtn(btnText: "지원하기", textColor: .black, textSize: 13, width: 60, height: 30, action: {
+            CustomBtn(btnText: "지원하기", textColor: Color(.cPrimary), textSize: 13, width: 60, height: 30, action: {
                 isSheetPresented = true
-            }, innerColor: .white, outerColor: .purple)
+            }, innerColor: .cPrimaryContainer, outerColor: .cPrimary)
             .padding(.top, 3)
         }
     }
@@ -64,7 +64,7 @@ struct ContentCell: View {
         policyId: 123,
         isScrapped: true,
         name: "청년취업사관학교",
-        description: "서울시에서 SW인재 양성을 위해...",
+        description: "서울시에서 SW인재 양성을 위해어쩌구 ~저ㅓ쩌구~ 2줄 넘어가는지 확인하자~",
         category: "JOB",
         age: "MIDDLE_AGED",
         url: "https://youth.gg.go.kr/_attach/gg/editor-image/2023/02/JZPCyzESBWoBWTqKjfINNWWwbm.png",

@@ -38,11 +38,11 @@ struct CategoryPolicy: View {
                             .padding(.vertical, 8)
                             .background(
                                 RoundedRectangle(cornerRadius: 20)
-                                    .fill(selectedCategory == category ? Color.purple : Color.gray.opacity(0.1))
+                                    .fill(selectedCategory == category ? Color.cPrimary : Color.cSurfaceContainer)
                             )
                             .overlay(
                                 RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color.purple, lineWidth: selectedCategory == category ? 2 : 0)
+                                    .stroke(Color.cPrimary, lineWidth: selectedCategory == category ? 0.1 : 0)
                             )
                     }
                 }
