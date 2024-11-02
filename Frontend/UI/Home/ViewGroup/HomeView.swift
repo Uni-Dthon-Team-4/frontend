@@ -19,25 +19,18 @@ struct HomeView: View {
                 
                 CategoryPolicy()
                     .environmentObject(categoryPolicyViewModel)
-                    .onAppear {
-                        Task {
-                            try? await categoryPolicyViewModel.fetchPolicies(category: "JOB")
-                        }
-                    }
             }
         }
         .contentMargins(.horizontal, 18, for: .scrollContent)
-        .onAppear {
+        .task {
             myPolicyViewModel.fetchPolicies()
+            try? await categoryPolicyViewModel.fetchPolicies(category: "JOB")
         }
         .refreshable {
-                    myPolicyViewModel.fetchPolicies()
-                    Task {
-                        try? await categoryPolicyViewModel.fetchPolicies(category: "JOB")
-                    }
-                    myPolicyViewModel.objectWillChange.send()
-                }
-            }
+            myPolicyViewModel.fetchPolicies()
+            try? await categoryPolicyViewModel.fetchPolicies(category: "JOB")
+        }
+    }
 }
 
 //MARK: - Preview

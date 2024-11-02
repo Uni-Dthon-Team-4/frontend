@@ -17,6 +17,7 @@ struct MyPolicy: View {
             titleAndArticle
             if let data = viewModel.randomPolicy {
                 articleLabel(data: data)
+                    .transition(.push(from: .top))
                     .onTapGesture {
                         isSheetPresented = true
                     }
@@ -28,11 +29,11 @@ struct MyPolicy: View {
                 
                 if let ageGroup = ageEnum(rawValue: data.age) {
                     ageImage(for: ageGroup)
+                        .transition(.opacity)
                 }
             }
-            Spacer()
         }
-        .frame(maxWidth: 357)
+        .animation(.easeInOut, value: viewModel.randomPolicy)
     }
     
     private var titleAndArticle: some View {
@@ -45,6 +46,7 @@ struct MyPolicy: View {
         }
     }
     
+    @ViewBuilder
     private func articleLabel(data: HomeMyPolicyResponseData) -> some View {
         HStack {
             VStack(alignment: .leading, spacing: 5) {
@@ -55,18 +57,20 @@ struct MyPolicy: View {
                 Text(data.name)
                     .font(.Pretendard(size: 20, family: .SemiBold))
                     .foregroundColor(Color(.cOnSurface))
-                
+                    .lineLimit(1)
+                    .contentTransition(.numericText())
                 Text(data.description)
                     .font(.Pretendard(size: 14, family: .Medium))
                     .foregroundColor(Color(.cOnSurface))
                     .lineLimit(1)
+                    .contentTransition(.opacity)
             }
+            .animation(.snappy, value: data)
             Spacer()
             Image("News")
                 .resizable()
                 .frame(width: 50, height: 50)
         }
-        .frame(width: 335, height: 79)
         .padding(6)
         .padding(.horizontal, 4)
         .background(Color(.cPrimaryContainer))
@@ -76,7 +80,8 @@ struct MyPolicy: View {
     private func ageImage(for ageGroup: ageEnum) -> some View {
         Image(ageGroup.imageName)
             .resizable()
-            .frame(width: 357, height: 125)
+            .aspectRatio(contentMode: .fill)
+            .frame(height: 125)
             .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }

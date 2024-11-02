@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct CategoryPolicy: View {
-    @StateObject private var viewModel = CategoryPolicyViewModel()
+    @EnvironmentObject private var viewModel: CategoryPolicyViewModel
     @State private var selectedCategory: policyCategory = .job
     
     var body: some View {
@@ -17,7 +17,6 @@ struct CategoryPolicy: View {
                 .task {
                     await fetchData()
                 }
-            Spacer()
         }
     }
     
@@ -38,28 +37,27 @@ struct CategoryPolicy: View {
                         await fetchData()
                     }
                 }) {
-                    HStack {
-                        Text("✨ \(category.toKorean())")
-                            .font(.Pretendard(size: 16, family: .Medium))
-                            .foregroundColor(selectedCategory == category ? .white : .black)
-                            .padding(.horizontal, 13)
-                            .padding(.vertical, 8)
-                            .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(selectedCategory == category ? Color.cPrimary : Color.cSurfaceContainer)
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color.cPrimary, lineWidth: selectedCategory == category ? 0.1 : 0)
-                            )
-                    }
+                    Text("✨ \(category.toKorean())")
+                        .frame(maxWidth: .infinity)
+                        .font(.Pretendard(size: 16, family: .Medium))
+                        .foregroundColor(selectedCategory == category ? .white : .black)
+                        .padding(.horizontal, 13)
+                        .padding(.vertical, 8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(selectedCategory == category ? Color.cPrimary : Color.cSurfaceContainer)
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color.cPrimary, lineWidth: selectedCategory == category ? 0.1 : 0)
+                        )
                 }
             }
         }
     }
     
     private var policyList: some View {
-        LazyVGrid(columns: [GridItem(.flexible())], spacing: 16) {
+        LazyVStack(spacing: 10) {
             ForEach(viewModel.policies) { data in
                 ContentCell(data: data)
             }

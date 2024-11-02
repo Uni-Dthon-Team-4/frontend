@@ -18,7 +18,7 @@ struct HomeMyPolicyResponse: Codable {
     let data: [HomeMyPolicyResponseData]
 }
 
-struct HomeMyPolicyResponseData: Identifiable, Codable {
+struct HomeMyPolicyResponseData: Identifiable, Codable, Equatable {
     let policyId: Int
     let name: String
     let description: String

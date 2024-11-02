@@ -39,9 +39,9 @@ final class TabBarViewController: UITabBarController {
     /// 탭바와 연결될 뷰컨트롤러 세팅하는 함수
     private func setTabViewControllers() {
         // TODO: 각각 맡은 페이지 구현 방식에 따라 수정 필요
-        let homeNavVC = UINavigationController(rootViewController: UIHostingController(rootView: HomeView()))
-        let classNavVC = UINavigationController(rootViewController: ClassViewController())
-        let searchNavVC = UINavigationController(rootViewController: UIHostingController(rootView: SearchView()))
+        let homeNavVC = UIHostingController(rootView: HomeView())
+        let classNavVC = UIHostingController(rootView: ClassMapView())
+        let searchNavVC = UIHostingController(rootView: SearchView())
         
         self.setViewControllers([homeNavVC, classNavVC, searchNavVC], animated: true)
     }
@@ -55,8 +55,8 @@ final class TabBarViewController: UITabBarController {
             items[1].selectedImage = UIImage(systemName: "circle.grid.cross.fill")
             items[1].image = UIImage(systemName: "circle.grid.cross")
             
-            items[2].selectedImage = UIImage(systemName: "map.fill")
-            items[2].image = UIImage(systemName: "map")
+            items[2].selectedImage = UIImage(systemName: "magnifyingglass.fill")
+            items[2].image = UIImage(systemName: "magnifyingglass")
             
             items[0].title = "홈"
             items[0].setTitleTextAttributes([NSAttributedString.Key.font : UIFont.Pretendard(size: 12, family: .Regular)], for: .normal)
@@ -66,7 +66,7 @@ final class TabBarViewController: UITabBarController {
             items[1].setTitleTextAttributes([NSAttributedString.Key.font : UIFont.Pretendard(size: 12, family: .Regular)], for: .normal)
             items[1].setTitleTextAttributes([NSAttributedString.Key.font : UIFont.Pretendard(size: 12, family: .SemiBold)], for: .selected)
 
-            items[2].title = "지도"
+            items[2].title = "검색"
             items[2].setTitleTextAttributes([NSAttributedString.Key.font : UIFont.Pretendard(size: 12, family: .Regular)], for: .normal)
             items[2].setTitleTextAttributes([NSAttributedString.Key.font : UIFont.Pretendard(size: 12, family: .SemiBold)], for: .selected)
         }

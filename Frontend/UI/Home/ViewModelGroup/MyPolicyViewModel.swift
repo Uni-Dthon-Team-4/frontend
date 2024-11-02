@@ -31,7 +31,7 @@ class MyPolicyViewModel: ObservableObject {
         provider.request(HomeMyPolicyAPITarget.searchPolicies(request)) { [weak self] result in
             switch result {
             case .success(let response):
-                Task {
+                DispatchQueue.main.async {
                     self?.policies = response.data
                     self?.selectRandomPolicy()
                 }

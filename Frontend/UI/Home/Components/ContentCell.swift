@@ -8,7 +8,21 @@ import SwiftUI
 
 struct ContentCell: View {
     let data: HomeCategoryResponseData
-    @State private var isSheetPresented: Bool = false
+    @State private var presentationType: PresentationType?
+    
+    private enum PresentationType: Identifiable {
+        case web(URL)
+        case detail
+        
+        var id: String {
+            switch self {
+            case .web(let url):
+                url.path()
+            case .detail:
+                "detail"
+            }
+        }
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -16,14 +30,22 @@ struct ContentCell: View {
             content
             supplyBtn
         }
-        .frame(width: 320, height: 111)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(11)
         .background(Color.gray.opacity(0.1))
         .clipShape(RoundedRectangle(cornerRadius: 10))
-        .sheet(isPresented: $isSheetPresented) {
-            SheetView(data: data)
-                .presentationDetents([.fraction(0.8)])
-                .presentationDragIndicator(.visible)
+        .onTapGesture {
+            presentationType = .detail
+        }
+        .sheet(item: $presentationType) { type in
+            switch type {
+            case .detail:
+                SheetView(data: data)
+                    .presentationDetents([.fraction(0.8)])
+                    .presentationDragIndicator(.visible)
+            case .web(let url):
+                SafariView(url: url)
+            }
         }
     }
 
@@ -45,14 +67,17 @@ struct ContentCell: View {
             Spacer()
         }
     }
-
+    
+    @ViewBuilder
     private var supplyBtn: some View {
-        HStack {
-            Spacer()
-            CustomBtn(btnText: "지원하기", textColor: Color(.cPrimary), textSize: 13, width: 60, height: 30, action: {
-                isSheetPresented = true
-            }, innerColor: .cPrimaryContainer, outerColor: .cPrimary)
-            .padding(.top, 3)
+        if let url = URL(string: data.applyUrl) {
+            HStack {
+                Spacer()
+                CustomBtn(btnText: "지원하기", textColor: Color(.cPrimary), textSize: 13, width: 60, height: 30, action: {
+                    presentationType = .web(url)
+                }, innerColor: .cPrimaryContainer, outerColor: .cPrimary)
+                .padding(.top, 3)
+            }
         }
     }
 }

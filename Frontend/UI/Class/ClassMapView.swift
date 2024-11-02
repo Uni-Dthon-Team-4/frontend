@@ -37,7 +37,7 @@ struct ClassMapView: View {
         }
         .safeAreaInset(edge: .top) {
             Label("내 주변 클래스를 확인해보세요", systemImage: "location.fill")
-                .font(.caption)
+                .font(.Pretendard(size: 12, family: .Medium))
                 .foregroundStyle(Color(.cOnSecondary))
                 .padding(EdgeInsets(top: 7, leading: 13, bottom: 7, trailing: 13))
                 .background(Color(.cSecondary), in: Capsule())
