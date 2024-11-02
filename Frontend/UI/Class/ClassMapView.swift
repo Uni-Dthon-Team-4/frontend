@@ -33,13 +33,14 @@ struct ClassMapView: View {
                     .id(selection.id)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                     .padding(EdgeInsets(top: 5, leading: 15, bottom: 15, trailing: 15))
-            } else {
-                Label("내 주변 클래스를 확인해보세요!", systemImage: "location.fill")
-                    .foregroundStyle(Color(.cOnPrimary))
-                    .padding(EdgeInsets(top: 10, leading: 15, bottom: 10, trailing: 15))
-                    .background(Color(.cPrimary), in: RoundedRectangle(cornerRadius: 15))
-                    .padding(EdgeInsets(top: 5, leading: 15, bottom: 15, trailing: 15))
             }
+        }
+        .safeAreaInset(edge: .top) {
+            Label("내 주변 클래스를 확인해보세요", systemImage: "location.fill")
+                .font(.caption)
+                .foregroundStyle(Color(.cOnSecondary))
+                .padding(EdgeInsets(top: 7, leading: 13, bottom: 7, trailing: 13))
+                .background(Color(.cSecondary), in: Capsule())
         }
     }
     
