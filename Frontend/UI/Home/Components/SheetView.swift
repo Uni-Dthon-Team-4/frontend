@@ -16,7 +16,6 @@ struct SheetView: View {
             Text("더 알아보기")
                 .font(.Pretendard(size: 18,family: .Bold))
             allContent
-            Spacer()
         }
     }
     

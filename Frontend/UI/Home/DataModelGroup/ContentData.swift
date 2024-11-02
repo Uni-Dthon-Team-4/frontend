@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ContentData: Codable {
+struct ContentData: Identifiable,Codable {
     let category: policyCategory
     let id : Int
     let title: String
