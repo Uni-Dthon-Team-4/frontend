@@ -9,136 +9,96 @@ import SwiftUI
 import Kingfisher
 
 struct MyPolicy: View {
+    @StateObject private var viewModel = MyPolicyViewModel()
     @State private var isSheetPresented: Bool = false
+    private let keyword: String
     
-    let data: ContentData
+    init(keyword: String = UserDefaults.standard.string(forKey: "userKeyword") ?? "청년") {
+        self.keyword = keyword
+    }
     
-    
-    //MARK: - Contents
     var body: some View {
-        VStack(spacing: 25){
+        VStack(spacing: 25) {
             titleAndArticle
-            image
-            
+            if !viewModel.policies.isEmpty {
+                ScrollView {
+                    LazyVStack(spacing: 16) {
+                        ForEach(viewModel.policies) { policy in
+                            policyView(for: policy)
+                        }
+                    }
+                }
+            } else {
+                Text("정책 데이터를 찾을 수 없습니다.")
+                    .font(.Pretendard(size: 16, family: .Medium))
+                    .foregroundColor(.gray)
+            }
             Spacer()
         }
         .frame(maxWidth: 357)
-    }
-    
-    /// 맨의 나를 위한정책글자와 뉴스
-    private var titleAndArticle: some View{
-        VStack(spacing: 31){
-            topTitle
-            articleBtn
+        .onAppear {
+            Task {
+                await viewModel.fetchPolicies(keyword: keyword)
+            }
         }
     }
     
-    
-    /// 위에 타이틀 글자
+    /// Main title and article button
+    private var titleAndArticle: some View {
+        VStack(spacing: 31) {
+            topTitle
+        }
+    }
+
+    /// Top title
     private var topTitle: some View {
-        HStack{
+        HStack {
             Text("나를 위한 정책")
                 .font(.Pretendard(size: 24, family: .Bold))
             Spacer()
         }
     }
-    
-    
-    /// 기사누르면 웹뷰뜨도록 해야함
-    private var articleBtn: some View {
-            Button(action: { isSheetPresented = true }) {
-                articleLabel
+
+    /// Individual policy view
+    private func policyView(for policy: HomeMyPolicyResponseData) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Text(policy.name)
+                    .font(.Pretendard(size: 16, family: .Bold))
+                Spacer()
             }
-            .sheet(isPresented: $isSheetPresented) {
-                      if let url = URL(string: data.URL1) {
-                          SafariView(url: url)
-                      }
-                  }
-        }
-    
-    /// 뉴스 내용담고 있는 텍스트들
-    private var articleLabel: some View {
-     
-        HStack{
-            VStack(spacing: 5){
-                benefitNews
-                title
-                content
+            HStack {
+                Text(policy.description)
+                    .font(.Pretendard(size: 14, family: .Medium))
+                    .lineLimit(2)
+                Spacer()
             }
-            Image("News")
-            
+            HStack {
+                Spacer()
+                Button(action: {
+                    if let url = URL(string: policy.url) {
+                        UIApplication.shared.open(url)
+                    }
+                }) {
+                    Text("자세히 보기")
+                        .font(.Pretendard(size: 13))
+                        .padding(10)
+                        .background(Color.purple.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                }
+            }
         }
-        .frame(width: 335, height: 89)
-        .padding(10)
-        .background(Color(.cPrimaryContainer))
+        .padding()
+        .background(Color.gray.opacity(0.1))
         .clipShape(RoundedRectangle(cornerRadius: 10))
-    }
-    
-    
-    
-    /// 도움이 되는 뉴스
-    private var benefitNews: some View {
-        HStack{
-            Text("도움이 되는 뉴스")
-                .font(.Pretendard(size: 12, family: .SemiBold))
-                .foregroundStyle(Color(.cOnPrimaryContainer))
-            Spacer()
-        }
-        
-        
-    }
-    
-    /// 뉴스 제목
-    private var title: some View{
-        HStack {
-            Text(data.title)
-                .font(.Pretendard(size: 20, family: .SemiBold))
-                .foregroundStyle(Color(.cOnSurface))
-            Spacer()
-         
-        }
-    }
-    
-    /// 뉴스 내용
-    private var content: some View{
-        HStack{
-            Text(data.content)
-                .font(.Pretendard(size: 14, family: .Medium))
-                .foregroundStyle(Color(.cOnSurface))
-                .lineLimit(1)
-            Spacer()
-        }
-        
-    }
-    
-    
-    /// 아래 청년, 노년 등에 대한 이미지
-    private var image: some View {
-        ZStack(alignment: .bottomLeading){
-            
-            
-            if let url = URL(string: data.image) {
-                KFImage(url)
-                    .placeholder {
-                        ProgressView()
-                            .frame(width: 100, height: 100)
-                    }.retry(maxCount: 2, interval: .seconds(2))
-                    .resizable()
-                    .frame(width: 355, height: 125)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.clear)
-                    )
-            }
-        }
-        
     }
 }
 
-
 //MARK: - Preview
-#Preview {
-    MyPolicy(data: ContentData(category: policyCategory.job, id: 123, title: "청년취업사관학교", content: "한줄설명한줄설명 한 줄 설 명 한 줄 설 명한 줄 설 명한 줄 설 명한 줄 설 명한 줄 설 명ㅁㄴ어ㅜㅁㄴ아ㅓ무너ㅏ움나ㅓ운머ㅏ우나머", image:  "https://1in.seoul.go.kr/images/front/img_policyInformation2.png", URL1:  "https://youth.gg.go.kr/_attach/gg/editor-image/2023/02/JZPCyzESBWoBWTqKjfINNWWwbm.png", URL2:  "https://youth.gg.go.kr/_attach/gg/editor-image/2023/02/JZPCyzESBWoBWTqKjfINNWWwbm.png"))
+struct MyPolicy_Preview: PreviewProvider {
+    static var previews: some View {
+        MyPolicy()
+            .previewLayout(.sizeThatFits)
+            .padding()
     }
-
+}
