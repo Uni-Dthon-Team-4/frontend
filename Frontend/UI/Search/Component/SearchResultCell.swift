@@ -10,12 +10,18 @@ import SwiftUI
 struct SearchResultCell: View {
     var result: SearchResult
     private var markdownMessage: AttributedString? {
-        try? AttributedString(markdown: result.message)
+        try? AttributedString(markdown: result.message, options: .init(allowsExtendedAttributes: true, interpretedSyntax: .inlineOnlyPreservingWhitespace))
     }
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
-            Text(result.search)
-                .font(.Pretendard(size: 16, family: .Medium))
+            HStack {
+                Text(result.search)
+                    .font(.Pretendard(size: 16, family: .Medium))
+                if result.isError {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(Color(.cError))
+                }
+            }
             Divider()
             HStack(spacing: 5) {
                 Image(systemName: "wand.and.stars.inverse")
@@ -47,7 +53,7 @@ struct SearchResultCell: View {
 #Preview {
     SearchResultCell(
         result: SearchResult(
-            isLoading: false,
+            isError: false, isLoading: false,
             search: "맏춤 정책 추천해줘",
             message: """
 ### 서울시는 1인가구를 위해 다양한 지원 정책을 제공하고 있습니다. 주요 프로그램은 다음과 같습니다: \n
