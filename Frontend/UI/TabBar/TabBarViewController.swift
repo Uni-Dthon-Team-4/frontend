@@ -1,3 +1,4 @@
+
 //
 //  TabBarViewController.swift
 //  Frontend
@@ -38,7 +39,7 @@ final class TabBarViewController: UITabBarController {
     /// 탭바와 연결될 뷰컨트롤러 세팅하는 함수
     private func setTabViewControllers() {
         // TODO: 각각 맡은 페이지 구현 방식에 따라 수정 필요
-        let homeNavVC = UINavigationController(rootViewController: HomeViewController())
+        let homeNavVC = UINavigationController(rootViewController: UIHostingController(rootView: HomeView()))
         let classNavVC = UINavigationController(rootViewController: ClassViewController())
         let searchNavVC = UINavigationController(rootViewController: UIHostingController(rootView: SearchView()))
         

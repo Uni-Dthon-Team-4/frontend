@@ -14,6 +14,7 @@ protocol BaseAPI: URLRequestConvertible {
     var method: HTTPMethod { get }
     var path: String { get }
     var parameters: RequestParams? { get }
+    var headers: HTTPHeaders? { get }
 }
 
 extension BaseAPI {
@@ -21,35 +22,48 @@ extension BaseAPI {
     var method: HTTPMethod { .get }
     var path: String { "" }
     var parameters: RequestParams? { nil }
+    var headers: HTTPHeaders? { nil }
     
-    // URLRequestConvertible 구현
     func asURLRequest() throws -> URLRequest {
         let url = try baseURL.asURL()
         var urlRequest = try URLRequest(url: url.appendingPathComponent(path), method: method)
+        urlRequest.setValue("", forHTTPHeaderField: "ngrok-skip-browser-warning")
+        
+        // 기본 헤더 설정
         urlRequest.setValue(ContentType.json.rawValue, forHTTPHeaderField: HTTPHeaderType.contentType.rawValue)
         
+        // 사용자 정의 헤더가 있는 경우 추가
+        if let headers = headers {
+            headers.dictionary.forEach { key, value in
+                urlRequest.setValue(value, forHTTPHeaderField: key)
+            }
+        }
+
+        
+        // 파라미터 설정
         if let parameters = parameters {
             switch parameters {
             case .query(let request):
                 var params = request?.toDictionary() ?? [:]
-                // 배열 타입인 파라미터를 쉼표로 구분된 문자열로 변환
+                // 배열 파라미터 처리
                 for (key, value) in params {
                     if let arrayValue = value as? [String] {
                         let joinedValue = arrayValue.joined(separator: ",")
                         params[key] = joinedValue
                     }
                 }
-
-                let queryParams = params.map { URLQueryItem(name: $0.key, value: "\($0.value)") }
+                
+                // URL에 쿼리 파라미터 추가
                 var components = URLComponents(string: url.appendingPathComponent(path).absoluteString)
-                components?.queryItems = queryParams
+                components?.queryItems = params.map { URLQueryItem(name: $0.key, value: "\($0.value)") }
                 urlRequest.url = components?.url
+                
             case .body(let request):
                 let params = request?.toDictionary() ?? [:]
                 urlRequest.httpBody = try JSONSerialization.data(withJSONObject: params, options: [])
             }
         }
-            
+        
         return urlRequest
     }
 }
