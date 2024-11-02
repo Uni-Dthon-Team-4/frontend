@@ -17,7 +17,7 @@ class ViewController: UIViewController {
     private func setupData() {
         let request = HomeRequest(page: 0)
         
-        HomeService.getHomePost(request: request) { [weak self] data, failed in
+        NetworkExService.getHomePost(request: request) { [weak self] data, failed in
             guard let data = data else {
                 // 에러가 난 경우, alert 창 present
                 switch failed {

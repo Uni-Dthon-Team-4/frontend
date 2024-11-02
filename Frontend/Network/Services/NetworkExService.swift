@@ -1,5 +1,5 @@
 //
-//  HomeService.swift
+//  NetworkExService.swift
 //  Frontend
 //
 //  Created by Suyeon Hwang on 11/2/24.
@@ -9,7 +9,7 @@ import Foundation
 
 /// 실제 NetworkService에 요청을 보냅니다.
 
-struct HomeService {
+struct NetworkExService {
     /// 홈 탭 게시글 데이터 받아오는 함수
     /// - Parameters:
     ///   - request: 받아올 홈 탭 게시글 페이지
