@@ -50,8 +50,8 @@ final class TabBarViewController: UITabBarController {
             items[0].selectedImage = UIImage(systemName: "house.fill")
             items[0].image = UIImage(systemName: "house")
             
-            items[1].selectedImage = UIImage(systemName: "")
-            items[1].image = UIImage(systemName: "")
+            items[1].selectedImage = UIImage(systemName: "circle.grid.cross.fill")
+            items[1].image = UIImage(systemName: "circle.grid.cross")
             
             items[2].selectedImage = UIImage(systemName: "map.fill")
             items[2].image = UIImage(systemName: "map")
