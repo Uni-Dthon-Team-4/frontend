@@ -528,7 +528,9 @@ final class SignupViewController: UIViewController {
     }
     
     private func moveToHomeVC() {
-        
+        DispatchQueue.main.async {
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVcTo(TabBarViewController(), animated: false)
+        }
     }
 }
 

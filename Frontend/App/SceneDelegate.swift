@@ -19,12 +19,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // 사용할 windowScene 인스턴스
         guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        let isFirstLaunch = UserDefaults.standard.bool(forKey: "isFirstLaunch")
+        print("sceneDelegate -- 앱 최초 실행 값: \(isFirstLaunch)")
+        
         // 화면을 구성하는 UIWindow
         window = UIWindow(windowScene: windowScene)
-        // 실제 실행 시 처음으로 보여질 뷰컨트롤러
-        let loginViewController = LoginViewController()
         
-        window?.rootViewController = loginViewController
+        // 실제 실행 시 처음으로 보여질 뷰컨트롤러
+        let tabBarVC = TabBarViewController() // 첫 시작 화면
+        let loginVC = LoginViewController()
+        
+        window?.rootViewController = isFirstLaunch ? tabBarVC : loginVC
         window?.makeKeyAndVisible()
     }
 
@@ -59,3 +65,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 }
 
+extension SceneDelegate {
+    func changeRootVcTo(_ vc: UIViewController, animated: Bool) {
+        guard let window = self.window else { return }
+        window.rootViewController = vc // 전환
+
+        UIView.transition(with: window, duration: 0.2, options: [.transitionCrossDissolve], animations: nil, completion: nil)
+    }
+}
