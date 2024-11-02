@@ -14,8 +14,6 @@ class SearchViewModel {
     var currentResult: UUID?
     private(set) var results: [SearchResult] = []
     private(set) var previousSearches: [String] = []
-    private(set) var previousPolicies: [RelevantPolicy] = []
-    private(set) var previousKeywords: [String] = []
     private(set) var isCacheExist: Bool = false
     private let maxCacheSize: Int = 8
     private let responseSpeed = 200 //ms
@@ -36,9 +34,7 @@ class SearchViewModel {
             let data = try Data(contentsOf: fileURL)
             let cache = try JSONDecoder().decode(SearchCache.self, from: data)
             previousSearches = Array(cache.searches)
-            previousKeywords = Array(cache.keywords)
-            previousPolicies = Array(cache.policies)
-            isCacheExist = !cache.searches.isEmpty || !cache.keywords.isEmpty || !cache.policies.isEmpty
+            isCacheExist = !cache.searches.isEmpty
         } catch {
             print("Fail to load search cache: \(error.localizedDescription)")
         }
@@ -51,18 +47,8 @@ class SearchViewModel {
         if previousSearches.count > maxCacheSize {
             previousSearches.remove(atOffsets: IndexSet(0..<previousSearches.count-maxCacheSize))
         }
-        previousKeywords.append(contentsOf: results.flatMap(\.keywords))
-        if previousKeywords.count > maxCacheSize {
-            previousKeywords.remove(atOffsets: IndexSet(0..<previousKeywords.count-maxCacheSize))
-        }
-        previousPolicies.append(contentsOf: results.flatMap(\.policies))
-        if previousPolicies.count > maxCacheSize {
-            previousPolicies.remove(atOffsets: IndexSet(0..<previousPolicies.count-maxCacheSize))
-        }
         let cache = SearchCache(
-            searches: Set(previousSearches),
-            keywords: Set(previousKeywords),
-            policies: Set(previousPolicies)
+            searches: Set(previousSearches)
         )
         do {
             let data = try JSONEncoder().encode(cache)
@@ -77,9 +63,7 @@ class SearchViewModel {
         let result = SearchResult(
             isLoading: true,
             search: text,
-            message: "",
-            keywords: [],
-            policies: []
+            message: ""
         )
         results.append(result)
         text.removeAll()

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 final class TabBarViewController: UITabBarController {
     
@@ -39,7 +40,7 @@ final class TabBarViewController: UITabBarController {
         // TODO: 각각 맡은 페이지 구현 방식에 따라 수정 필요
         let homeNavVC = UINavigationController(rootViewController: HomeViewController())
         let classNavVC = UINavigationController(rootViewController: ClassViewController())
-        let searchNavVC = UINavigationController(rootViewController: SearchViewController())
+        let searchNavVC = UINavigationController(rootViewController: UIHostingController(rootView: SearchView()))
         
         self.setViewControllers([homeNavVC, classNavVC, searchNavVC], animated: true)
     }

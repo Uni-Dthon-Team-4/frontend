@@ -9,6 +9,4 @@ import Foundation
 
 struct SearchCache: Codable {
     var searches: Set<String>
-    var keywords: Set<String>
-    var policies: Set<RelevantPolicy>
 }

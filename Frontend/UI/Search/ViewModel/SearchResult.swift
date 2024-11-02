@@ -12,15 +12,4 @@ struct SearchResult: Identifiable {
     var isLoading: Bool
     var search: String
     var message: String
-    var keywords: [String]
-    var policies: [RelevantPolicy]
-}
-
-struct RelevantPolicy: Codable, Identifiable, Hashable {
-    var id: Int { policyID }
-    var policyID: Int
-    var name: String
-    var description: String
-    var url: String
-    var age: String
 }

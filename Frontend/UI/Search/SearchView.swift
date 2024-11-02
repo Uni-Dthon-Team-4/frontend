@@ -13,7 +13,7 @@ struct SearchView: View {
     
     var body: some View {
         GeometryReader { proxy in
-            let cellHeight = proxy.size.height-(proxy.safeAreaInsets.top+vSpacing)
+            let cellHeight = proxy.size.height-vSpacing
             ScrollView(.vertical) {
                 LazyVStack(alignment: .leading, spacing: vSpacing) {
                     Text("맞춤 정책 찾아보기")

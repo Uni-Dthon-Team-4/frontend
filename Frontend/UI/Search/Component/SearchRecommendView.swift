@@ -24,13 +24,6 @@ struct SearchRecommendView: View {
                     }
                 }
             }
-            if !viewmodel.previousPolicies.isEmpty {
-                RecommendHScrollSection(header: "확인한 정책") {
-                    ForEach(viewmodel.previousPolicies, id:\.self) { policy in
-                        SmallPolicyCell(policy: policy)
-                    }
-                }
-            }
         }
     }
     
