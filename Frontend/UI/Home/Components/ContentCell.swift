@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ContentCell: View {
-    let data: ContentData
+    let data: HomeCategoryResponseData
     @State private var isSheetPresented: Bool = false
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             title
@@ -27,26 +27,26 @@ struct ContentCell: View {
                 .presentationDragIndicator(.visible)
         }
     }
-    
+
     private var title: some View {
         HStack {
-            Text(data.title)
+            Text(data.name)
                 .font(.Pretendard(size: 16, family: .Bold))
                 .padding(.horizontal, 5)
             Spacer()
         }
     }
-    
+
     private var content: some View {
         HStack {
-            Text(data.content)
+            Text(data.description)
                 .font(.Pretendard(size: 14, family: .Medium))
                 .lineLimit(2)
                 .padding(.horizontal, 5)
             Spacer()
         }
     }
-    
+
     private var supplyBtn: some View {
         HStack {
             Spacer()
@@ -57,7 +57,17 @@ struct ContentCell: View {
         }
     }
 }
+
 //MARK: - Preview
 #Preview {
-    ContentCell(data: ContentData(category: policyCategory.job, id: 123, title: "청년취업사관학교", content: "한줄ㄴㅁ아ㅣㅁㅁㄴ아dkdklamdkdksusdgktpdy 안녕하세요 저는 한지강입니다. 내 잘 부탁드립ㄴ다. 안녕하세요 저는 ", image: "https://1in.seoul.go.kr/images/front/img_policyInformation2.png", URL1: "https://youth.gg.go.kr/_attach/gg/editor-image/2023/02/JZPCyzESBWoBWTqKjfINNWWwbm.png", URL2: "https://youth.gg.go.kr/_attach/gg/editor-image/2023/02/JZPCyzESBWoBWTqKjfINNWWwbm.png"))
+    ContentCell(data: HomeCategoryResponseData(
+        policyId: 123,
+        isScrapped: true,
+        name: "청년취업사관학교",
+        description: "서울시에서 SW인재 양성을 위해...",
+        category: "JOB",
+        age: "MIDDLE_AGED",
+        url: "https://youth.gg.go.kr/_attach/gg/editor-image/2023/02/JZPCyzESBWoBWTqKjfINNWWwbm.png",
+        applyUrl: "https://youth.gg.go.kr/_attach/gg/editor-image/2023/02/JZPCyzESBWoBWTqKjfINNWWwbm.png"
+    ))
 }

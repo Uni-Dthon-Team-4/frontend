@@ -10,8 +10,7 @@ import Kingfisher
 struct SheetView: View {
     @State private var showWebView = false
     @State private var webURL: URL?
-    let data: ContentData
-
+    let data: HomeCategoryResponseData
     var body: some View {
         VStack(spacing: 15) {
             Text("더 알아보기")
@@ -37,7 +36,7 @@ struct SheetView: View {
 
     private var articleImage: some View {
         ZStack(alignment: .bottomLeading) {
-            if let url = URL(string: data.image) {
+            if let url = URL(string: data.url) {
                 KFImage(url)
                     .placeholder {
                         ProgressView()
@@ -56,14 +55,13 @@ struct SheetView: View {
     }
 
     private var title: some View {
-        Text(data.title)
-            .font(.Pretendard(size: 16, family: .Bold))
+        Text(data.name)            .font(.Pretendard(size: 16, family: .Bold))
             .frame(maxHeight: 22)
     }
 
     private var content: some View {
         VStack {
-            Text(data.content)
+            Text(data.description)
                 .font(.Pretendard(size: 16, family: .Medium))
                 .multilineTextAlignment(.leading)
             Spacer()
@@ -74,14 +72,14 @@ struct SheetView: View {
     private var btnSet: some View {
         HStack(spacing: 19) {
             CustomBtn(btnText: "자세히보기", textColor: .purple, textSize: 18, width: 167, height: 49, action: {
-                if let url = URL(string: data.URL1) {
+                if let url = URL(string: data.url) {  // Changed from data.URL1 to data.url
                     webURL = url
                     showWebView = true
                 }
             }, innerColor: .indigo, outerColor: .purple)
 
             CustomBtn(btnText: "신청하기", textColor: .purple, textSize: 18, width: 167, height: 49, action: {
-                if let url = URL(string: data.URL2) {
+                if let url = URL(string: data.applyUrl) {
                     webURL = url
                     showWebView = true
                 }
@@ -91,5 +89,14 @@ struct SheetView: View {
 }
 
 #Preview {
-    SheetView(data: ContentData(category: .job, id: 1, title: "청년취업사관학교", content: "서울시에서 SW인재 양성을 위해…", image: "https://1in.seoul.go.kr/images/front/img_policyInformation2.png", URL1: "https://www.naver.com", URL2: "https://www.google.com"))
+    SheetView(data: HomeCategoryResponseData(
+        policyId: 123,
+        isScrapped: true,
+        name: "청년취업사관학교",
+        description: "서울시에서 SW인재 양성을 위해...",
+        category: "JOB",
+        age: "MIDDLE_AGED",
+        url: "https://www.naver.com",
+        applyUrl: "https://www.google.com"
+    ))
 }
