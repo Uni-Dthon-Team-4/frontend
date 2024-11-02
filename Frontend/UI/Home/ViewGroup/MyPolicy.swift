@@ -9,7 +9,7 @@ import SwiftUI
 import Kingfisher
 
 struct MyPolicy: View {
-    @StateObject private var viewModel = MyPolicyViewModel()
+    @EnvironmentObject private var viewModel: MyPolicyViewModel
     @State private var isSheetPresented: Bool = false
     
     var body: some View {
@@ -31,9 +31,6 @@ struct MyPolicy: View {
                 }
             }
             Spacer()
-        }
-        .onAppear {
-            viewModel.fetchPolicies()
         }
         .frame(maxWidth: 357)
     }
@@ -87,4 +84,5 @@ struct MyPolicy: View {
 // MARK: - Preview
 #Preview {
     MyPolicy()
+        .environmentObject(MyPolicyViewModel())
 }

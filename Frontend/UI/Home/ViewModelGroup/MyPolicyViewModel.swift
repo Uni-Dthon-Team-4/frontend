@@ -10,13 +10,11 @@ import Alamofire
 @MainActor
 class MyPolicyViewModel: ObservableObject {
     @Published var policies: [HomeMyPolicyResponseData] = []
+    @Published var randomPolicy: HomeMyPolicyResponseData? 
     
     private let provider = NetworkService.shared
-    
-    var randomPolicy: HomeMyPolicyResponseData? {
-        policies.randomElement()
-    }
 
+    // 정책 목록을 불러오는 메서드
     func fetchPolicies() {
         let keyword1 = UserDefaults.standard.string(forKey: "keyword1") ?? ""
         let keyword2 = UserDefaults.standard.string(forKey: "keyword2") ?? ""
@@ -35,10 +33,19 @@ class MyPolicyViewModel: ObservableObject {
             case .success(let response):
                 Task {
                     self?.policies = response.data
+                    self?.selectRandomPolicy()
                 }
             case .failure(let error):
                 print("Error fetching policies: \(error.localizedDescription)")
             }
         }
+    }
+    
+    private func selectRandomPolicy() {
+        randomPolicy = policies.randomElement()
+    }
+    
+    func refreshRandomPolicy() {
+        selectRandomPolicy()
     }
 }

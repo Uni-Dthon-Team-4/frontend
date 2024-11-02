@@ -25,7 +25,7 @@ extension HomeCategoryAPITarget: BaseAPI {
     var path: String {
         switch self {
         case .getPoliciesByAge:
-            return "api/policies/by-age"
+            return "/api/policies/by-age"
         }
     }
 

@@ -16,9 +16,6 @@ struct HomeView: View {
             VStack {
                 MyPolicy()
                     .environmentObject(myPolicyViewModel)
-                    .onAppear {
-                        myPolicyViewModel.fetchPolicies()
-                    }
                 
                 CategoryPolicy()
                     .environmentObject(categoryPolicyViewModel)
@@ -29,15 +26,18 @@ struct HomeView: View {
                     }
             }
         }
-        .frame(maxWidth: 357)
-        .refreshable {
-            // 새로고침 시 데이터 다시 가져오기
+        .contentMargins(.horizontal, 18, for: .scrollContent)
+        .onAppear {
             myPolicyViewModel.fetchPolicies()
-            Task {
-                try? await categoryPolicyViewModel.fetchPolicies(category: "JOB")
-            }
         }
-    }
+        .refreshable {
+                    myPolicyViewModel.fetchPolicies()
+                    Task {
+                        try? await categoryPolicyViewModel.fetchPolicies(category: "JOB")
+                    }
+                    myPolicyViewModel.objectWillChange.send()
+                }
+            }
 }
 
 //MARK: - Preview

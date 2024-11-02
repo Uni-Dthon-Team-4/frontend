@@ -14,10 +14,9 @@ class CategoryPolicyViewModel: ObservableObject {
     private let networkService = NetworkService.shared
     
     func fetchPolicies(category: String) async throws {
-        // UserDefaults에서 UUID를 가져오기
         let uuid = UserDefaultsManager.shared.getData(type: String.self, forKey: .uuid)
         guard !uuid.isEmpty else {
-            print("❌ UUID가 설정되어 있지 않습니다. 정책을 불러오지 않습니다.")
+            print("UUID가 설정되어 있지 않습니다. 정책을 불러오지 않습니다.")
             return
         }
         
@@ -32,7 +31,7 @@ class CategoryPolicyViewModel: ObservableObject {
             print("Request Headers: \(urlRequest.allHTTPHeaderFields ?? [:])")
             print("Request Method: \(urlRequest.httpMethod ?? "No Method")")
         } catch {
-            print("❌ Failed to create URLRequest: \(error)")
+            print("Failed to create URLRequest: \(error)")
             return
         }
         
@@ -41,18 +40,15 @@ class CategoryPolicyViewModel: ObservableObject {
             case .success(let response):
                 DispatchQueue.main.async {
                     self?.policies = response.data
-                    print("✅ 데이터 성공적으로 불러옴: \(response.data)")
+                    print("데이터 성공적으로 불러옴: \(response.data)")
                 }
             case .failure(let error):
-                print("❌ 데이터 가져오는 중 오류 발생: \(error.localizedDescription)")
+                print("데이터 가져오는 중 오류 발생: \(error.localizedDescription)")
                 
                 if case .unableToDecode = error {
-                    print("⚠️ 디코딩 실패, 응답 형식이 예상과 다릅니다.")
+                    print("디코딩 실패, 응답 형식이 예상과 다릅니다.")
                     
-                    if let errorData = try? JSONSerialization.data(withJSONObject: ["error": error.localizedDescription], options: []),
-                       let jsonString = String(data: errorData, encoding: .utf8) {
-                        print("UTF-8 형식으로 변환된 에러 데이터: \(jsonString)")
-                    }
+                    
                 }
             }
         }

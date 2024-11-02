@@ -24,7 +24,7 @@ extension HomeMyPolicyAPITarget: BaseAPI {
     var path: String {
         switch self {
         case .searchPolicies:
-            return "api/policies/search"
+            return "/api/policies/search"
         }
     }
 
