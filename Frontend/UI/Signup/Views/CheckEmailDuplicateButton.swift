@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CheckEmailDuplicateButton: UIButton {
+final class CheckEmailDuplicateButton: UIButton {
     
     // MARK: - Properties
     
@@ -42,6 +42,8 @@ class CheckEmailDuplicateButton: UIButton {
                 button.configuration?.attributedTitle?.setAttributes(AttributeContainer([NSAttributedString.Key.foregroundColor: UIColor(hex: "85888A"), NSAttributedString.Key.font: UIFont.Pretendard(family: .Bold)]))
             }
         }
+        
+        self.configurationUpdateHandler = buttonStateHandler
     }
     
     required init?(coder: NSCoder) {
