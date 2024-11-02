@@ -428,6 +428,51 @@ final class SignupViewController: UIViewController {
     
     @objc private func signupButtonDidTap() {
         print("signup button tapped")
+        
+        let requestDTO = SignupRequestDTO(userId: emailTextField.text!,
+                                          password: passwordTextField.text!,
+                                          email: emailTextField.text!,
+                                          age: selectedAge!,
+                                          keyword1: selectedInterestArray.popFirst(),
+                                          keyword2: selectedInterestArray.popFirst(),
+                                          keyword3: selectedInterestArray.popFirst(),
+                                          address: nil)
+        print("dto: \(requestDTO)")
+        
+        SignupService.postSignup(request: requestDTO) { [weak self] succeed, failed in
+            guard let data = succeed else {
+                // 에러가 난 경우, alert 창 present
+                switch failed {
+                case .disconnected:
+                    self?.present(UIAlertController.networkErrorAlert(title: failed!.localizedDescription), animated: true)
+                default:
+                    self?.present(UIAlertController.networkErrorAlert(title: "회원가입에 실패하였습니다."), animated: true)
+                }
+                return
+            }
+            
+            print("=== Signup, postSignup succeeded ===")
+            print("== data: \(data)")
+            
+            UserDefaultsManager.shared.setData(value: data.id, key: .id)
+            UserDefaultsManager.shared.setData(value: data.uuid, key: .uuid)
+            UserDefaultsManager.shared.setData(value: data.age, key: .age)
+            UserDefaultsManager.shared.setData(value: data.keyword1 ?? "", key: .keyword1)
+            UserDefaultsManager.shared.setData(value: data.keyword2 ?? "", key: .keyword2)
+            UserDefaultsManager.shared.setData(value: data.keyword3 ?? "", key: .keyword3)
+            
+            self?.moveToHomeVC()
+            
+//            // 만약 실패한 경우 실패했다고 알림창
+//            if data.isSuccess == false {
+//                self?.present(UIAlertController.networkErrorAlert(title: "댓글 등록에 실패하였습니다."), animated: true)
+//                return
+//            }
+//            else {
+//                print("=== 새 댓글 등록, 데이터 업데이트 ===")
+//                self?.loadCommentData()
+//            }
+        }
     }
     
     // MARK: - Functions
@@ -480,6 +525,10 @@ final class SignupViewController: UIViewController {
         //section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16) // 섹션 여백 설정
 
         return section
+    }
+    
+    private func moveToHomeVC() {
+        
     }
 }
 

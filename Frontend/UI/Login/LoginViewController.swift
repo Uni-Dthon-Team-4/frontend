@@ -179,6 +179,14 @@ final class LoginViewController: UIViewController {
     
     @objc private func signupButtonDidTap() {
         print("signup button tapped")
+        
+        // 프로필 설정 창 올리기
+        let signupVC = SignupViewController()
+        signupVC.modalPresentationStyle = .fullScreen
+        self.present(signupVC, animated: true)
+//        if let loginVC = self.navigationController?.topViewController as? LoginVC {
+//            loginVC.present(newUserProfileVC, animated: true)
+//        }
     }
     
     // MARK: - Functions
