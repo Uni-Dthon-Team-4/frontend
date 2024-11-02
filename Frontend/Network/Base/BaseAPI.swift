@@ -17,7 +17,7 @@ protocol BaseAPI: URLRequestConvertible {
 }
 
 extension BaseAPI {
-    var baseURL: String { "https://api.unidthon.site" }
+    var baseURL: String { "https://coherent-midge-probably.ngrok-free.app/" }
     var method: HTTPMethod { .get }
     var path: String { "" }
     var parameters: RequestParams? { nil }
