@@ -46,7 +46,6 @@ struct MyPolicy: View {
         }
     }
     
-    @ViewBuilder
     private func articleLabel(data: HomeMyPolicyResponseData) -> some View {
         HStack {
             VStack(alignment: .leading, spacing: 5) {
@@ -71,8 +70,9 @@ struct MyPolicy: View {
                 .resizable()
                 .frame(width: 50, height: 50)
         }
-        .padding(6)
-        .padding(.horizontal, 4)
+        .padding(8)
+        .padding(.horizontal, 8)
+        .padding(.vertical,4)
         .background(Color(.cPrimaryContainer))
         .clipShape(RoundedRectangle(cornerRadius: 10))
     }
