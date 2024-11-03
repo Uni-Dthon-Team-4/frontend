@@ -10,8 +10,7 @@ import Alamofire
 struct SheetView: View {
     @State private var showWebView = false
     @State private var webURL: URL?
-    @State private var descriptionText: String = "로딩 중입니다..."
-    
+    @State private var descriptionText: String? 
     private let networkService = NetworkService.shared
     let data: HomeCategoryResponseData
 
@@ -31,6 +30,7 @@ struct SheetView: View {
             fetchPolicyDescription()
         }
     }
+
     private func fetchPolicyDescription() {
         let target = HomeAiAPITarget.getPolicyDescription(policyName: data.name)
         
@@ -43,16 +43,12 @@ struct SheetView: View {
                         descriptionText = description
                     } else {
                         descriptionText = "정책 설명을 불러오는 중 오류가 발생했습니다."
-                        print("데이터 변환 오류: 문자열로 변환할 수 없습니다.")
                     }
-                case .failure(let error):
+                case .failure:
                     descriptionText = "정책 설명을 불러오는 중 오류가 발생했습니다."
-                    print("오류 발생: \(error.localizedDescription)")
                 }
             }
     }
-
-
     
     private var allContent: some View {
         VStack(alignment: .leading, spacing: 15) {
@@ -71,13 +67,8 @@ struct SheetView: View {
                     .resizable()
                     .frame(width: 355, height: 125)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.clear)
-                    )
             }
-            }
-        
+        }
     }
 
     private var title: some View {
@@ -88,9 +79,15 @@ struct SheetView: View {
 
     private var content: some View {
         VStack {
-            Text(descriptionText) // 받아온 설명을 표시
-                .font(.Pretendard(size: 16, family: .Medium))
-                .multilineTextAlignment(.leading)
+            if let text = descriptionText {
+                Text(text)
+                    .font(.Pretendard(size: 16, family: .Medium))
+                    .multilineTextAlignment(.leading)
+            } else {
+                ProgressView("")
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .frame(maxWidth: .infinity, alignment: .center)
+            }
             Spacer()
         }
         .frame(maxWidth: 353, maxHeight: 300)
@@ -114,18 +111,4 @@ struct SheetView: View {
         }
         .frame(maxWidth: 353)
     }
-
-}
-
-#Preview {
-    SheetView(data: HomeCategoryResponseData(
-        policyId: 123,
-        isScrapped: true,
-        name: "청년취업사관학교",
-        description: "서울시에서 SW인재 양성을 위해...",
-        category: "JOB",
-        age: "MIDDLE_AGED",
-        url: "https://www.naver.com",
-        applyUrl: "https://www.google.com"
-    ))
 }

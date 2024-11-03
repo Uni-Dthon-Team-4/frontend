@@ -54,6 +54,7 @@ struct CategoryPolicy: View {
                 }
             }
         }
+        .padding(.vertical, 15)
     }
     
     private var policyList: some View {
